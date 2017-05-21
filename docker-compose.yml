@@ -1,0 +1,38 @@
+#1. https://hub.docker.com/_/mysql/
+#2. https://hub.docker.com/_/redis/
+#3. https://hub.docker.com/r/hyness/spring-cloud-config-server/
+#4. custom eureka server (1.6.2) available at https://github.com/jphilippeplante/eureka-server.git
+version: '2'
+services:
+  local-mysql:
+    image: "mysql:latest"
+    ports:
+     - "3306:3306"
+    volumes:
+     - /tmp/mysql-data:/var/lib/mysql
+    environment:
+     - MYSQL_ROOT_PASSWORD=my-secret-pw
+  local-redis:
+    image: "redis:alpine"
+    environment:
+      - REDIS_APPENDFSYNC=always
+      - REDIS_APPENDONLY=yes
+      - REDIS_PASSWORD=password
+    ports:
+     - "6379:6379"
+    volumes:
+     - /tmp/redis-data:/data
+  local-configserver:
+    image: "hyness/spring-cloud-config-server:latest"
+    ports:
+     - "8888:8888"
+    volumes:
+     - ./configurations/config-server.yml:/config/application.yml
+  local-eureka:
+    build: https://github.com/jphilippeplante/eureka-server.git
+    #build: ./eureka-server
+    image: "eureka-server:1.6.2"
+    ports:
+     - "8761:8761"
+    links:
+     - local-configserver:configserver

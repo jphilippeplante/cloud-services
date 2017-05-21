@@ -1,0 +1,13 @@
+version: '2'
+services:
+#  local-uaa:
+#    build: https://github.com/hortonworks/docker-cloudbreak-uaa.git
+#    image: hortonworks/docker-cloudbreak-uaa:latest
+#    links:
+#      - local-mysql:db
+#    volumes:
+#     - /tmp/uaa:/uaa
+#    environment:
+#     - UAA_CONFIG_URL=https://raw.githubusercontent.com/sequenceiq/docker-uaa/master/uaa.yml
+#  app1
+#  ...
