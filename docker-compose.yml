@@ -30,9 +30,14 @@ services:
      - ./configurations/config-server.yml:/config/application.yml
   local-eureka:
     build: https://github.com/jphilippeplante/eureka-server.git
-    #build: ./eureka-server
     image: "eureka-server:1.6.2"
     ports:
      - "8761:8761"
     links:
      - local-configserver:configserver
+  local-hystrix-turbine:
+    image: "mlabouardy/hystrix-dashboard:latest"
+    port:
+      - "7979:7979"
+    volumes:
+     - ./configurations/hystrix-server.yml:/application.yml
