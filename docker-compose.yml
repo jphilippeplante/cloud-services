@@ -2,7 +2,7 @@
 #2. https://hub.docker.com/_/redis/
 #3. https://hub.docker.com/r/hyness/spring-cloud-config-server/
 #4. custom eureka server (1.6.2) available at https://github.com/jphilippeplante/eureka-server.git
-#5. https://github.com/mlabouardy/hystrix-dashboard-docker
+#5. https://github.com/jphilippeplante/hystrix-dashboard
 #6. https://hub.docker.com/r/library/rabbitmq
 version: '2'
 services:
@@ -38,13 +38,18 @@ services:
     links:
      - local-configserver:configserver
   local-hystrix-turbine:
-    image: "mlabouardy/hystrix-dashboard:latest"
+    build: https://github.com/jphilippeplante/hystrix-turbine.git
+    image: "hystrix-turbine:1.0.0"
+    #image: "mlabouardy/hystrix-dashboard:latest"
+    links:
+      - local-rabbitmq:rabbitmq
     ports:
       - "7979:7979"
+      - "8989:8989"
     volumes:
      - ./configurations/hystrix-server.yml:/application.yml
   local-rabbitmq:
-    image: "rabbitmq:latest"
+    image: "rabbitmq:management"
     ports:
       - "5672:5672"
       - "15672:15672"
