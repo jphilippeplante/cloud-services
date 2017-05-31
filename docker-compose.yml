@@ -38,7 +38,7 @@ services:
     links:
      - configserver:configserver
     volumes:
-     - ./configurations/eureka-server.yml:/application.yml
+     - ./configurations/eureka-server.yml:/config/application.yml
   hystrix-turbine:
     build: https://github.com/jphilippeplante/hystrix-turbine.git
     image: "hystrix-turbine:1.0.0"
@@ -50,7 +50,7 @@ services:
       - "7979:7979"
       - "8989:8989"
     volumes:
-     - ./configurations/hystrix-server.yml:/application.yml
+     - ./configurations/hystrix-server.yml:/config/application.yml
   rabbitmq:
     image: "rabbitmq:management"
     ports:
