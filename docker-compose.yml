@@ -2,11 +2,11 @@
 #2. https://hub.docker.com/_/redis/
 #3. https://hub.docker.com/r/hyness/spring-cloud-config-server/
 #4. custom eureka server (1.6.2) available at https://github.com/jphilippeplante/eureka-server.git
-#5. https://github.com/jphilippeplante/hystrix-dashboard
+#5. custom hystrix and turbine (via rabbitmq) (1.0.0) https://github.com/jphilippeplante/hystrix-turbine
 #6. https://hub.docker.com/r/library/rabbitmq
 version: '2'
 services:
-  local-mysql:
+  mysql:
     image: "mysql:latest"
     ports:
      - "3306:3306"
@@ -14,7 +14,7 @@ services:
      - /tmp/mysql-data:/var/lib/mysql
     environment:
      - MYSQL_ROOT_PASSWORD=my-secret-pw
-  local-redis:
+  redis:
     image: "redis:alpine"
     environment:
       - REDIS_APPENDFSYNC=always
@@ -24,31 +24,34 @@ services:
      - "6379:6379"
     volumes:
      - /tmp/redis-data:/data
-  local-configserver:
+  configserver:
     image: "hyness/spring-cloud-config-server:latest"
     ports:
      - "8888:8888"
     volumes:
      - ./configurations/config-server.yml:/config/application.yml
-  local-eureka:
+  eureka:
     build: https://github.com/jphilippeplante/eureka-server.git
     image: "eureka-server:1.6.2"
     ports:
      - "8761:8761"
     links:
-     - local-configserver:configserver
-  local-hystrix-turbine:
+     - configserver:configserver
+    volumes:
+     - ./configurations/eureka-server.yml:/application.yml
+  hystrix-turbine:
     build: https://github.com/jphilippeplante/hystrix-turbine.git
     image: "hystrix-turbine:1.0.0"
-    #image: "mlabouardy/hystrix-dashboard:latest"
+    depends_on:
+      - rabbitmq
     links:
-      - local-rabbitmq:rabbitmq
+      - rabbitmq:rabbitmq
     ports:
       - "7979:7979"
       - "8989:8989"
     volumes:
      - ./configurations/hystrix-server.yml:/application.yml
-  local-rabbitmq:
+  rabbitmq:
     image: "rabbitmq:management"
     ports:
       - "5672:5672"
