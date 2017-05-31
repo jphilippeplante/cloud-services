@@ -35,7 +35,7 @@ docker-compose -f docker-compose.yml -f extras/service_example.yml <...> up
   - Data location: /tmp/local-redis
 - rabbitmq:management
   - Port: 5672
-  - Management port: http://<ip>:15672 u/p: guest/guest
+  - Management port: http://**DOCKERMACHINEIP**:15672 u/p: guest/guest
 
 ## Custom Docker images:
 - Spring Cloud Config Server (https://github.com/jphilippeplante/config-server)
@@ -45,5 +45,5 @@ docker-compose -f docker-compose.yml -f extras/service_example.yml <...> up
   - Port: 8761
   - Configuration: configurations/eureka-server.yml
 - Hystrix and Turbine via rabbitMQ (https://github.com/jphilippeplante/hystrix-turbine)
-  - Hystrix Dashbord: http://<ip>:7979/hystrix
-  - Turbine Stream: http://<ip>:8989/turbine.stream
+  - Hystrix Dashbord: http://**DOCKERMACHINEIP**:7979/hystrix
+  - Turbine Stream: http://**DOCKERMACHINEIP**:8989/turbine.stream
