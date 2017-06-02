@@ -17,9 +17,8 @@ services:
   redis:
     image: "redis:alpine"
     environment:
-      - REDIS_APPENDFSYNC=always
-      - REDIS_APPENDONLY=yes
-      - REDIS_PASSWORD=password
+     - REDIS_APPENDFSYNC=always
+     - REDIS_APPENDONLY=yes
     ports:
      - "6379:6379"
     volumes:
@@ -31,28 +30,34 @@ services:
     volumes:
      - ./configurations/config-server.yml:/config/application.yml
   eureka:
-    build: https://github.com/jphilippeplante/eureka-server.git
-    image: "eureka-server:1.6.2"
+    #build: https://github.com/jphilippeplante/eureka-server.git
+    build: ../eureka-server
+    image: "eureka-server:1.6.2a"
     ports:
      - "8761:8761"
+    depends_on:
+     - configserver
     links:
      - configserver:configserver
     volumes:
      - ./configurations/eureka-server.yml:/config/application.yml
   hystrix-turbine:
-    build: https://github.com/jphilippeplante/hystrix-turbine.git
-    image: "hystrix-turbine:1.0.0"
+    #build: https://github.com/jphilippeplante/hystrix-turbine.git
+    build: ../hystrix-turbine
+    image: "hystrix-turbine:1.0.0a"
     depends_on:
-      - rabbitmq
+     - rabbitmq
+     - configserver
     links:
-      - rabbitmq:rabbitmq
+     - rabbitmq:rabbitmq
+     - configserver:configserver
     ports:
-      - "7979:7979"
-      - "8989:8989"
+     - "7979:7979"
+     - "8989:8989"
     volumes:
      - ./configurations/hystrix-server.yml:/config/application.yml
   rabbitmq:
     image: "rabbitmq:management"
     ports:
-      - "5672:5672"
-      - "15672:15672"
+     - "5672:5672"
+     - "15672:15672"
