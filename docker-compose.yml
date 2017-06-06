@@ -30,9 +30,9 @@ services:
     volumes:
      - ./configurations/config-server.yml:/config/application.yml
   eureka:
-    #build: https://github.com/jphilippeplante/eureka-server.git
-    build: ../eureka-server
-    image: "eureka-server:1.6.2a"
+    build: https://github.com/jphilippeplante/eureka-server.git
+    #build: ../eureka-server
+    image: "eureka-server:1.0.0"
     ports:
      - "8761:8761"
     depends_on:
@@ -42,9 +42,9 @@ services:
     volumes:
      - ./configurations/eureka-server.yml:/config/application.yml
   hystrix-turbine:
-    #build: https://github.com/jphilippeplante/hystrix-turbine.git
-    build: ../hystrix-turbine
-    image: "hystrix-turbine:1.0.0a"
+    build: https://github.com/jphilippeplante/hystrix-turbine.git
+    #build: ../hystrix-turbine
+    image: "hystrix-turbine:1.0.0"
     depends_on:
      - rabbitmq
      - configserver
