@@ -3,4 +3,4 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/jphilippeplante/pfc
+          uri: file:///config-repo

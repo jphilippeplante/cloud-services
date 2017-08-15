@@ -1,10 +1,10 @@
 #1. https://hub.docker.com/_/mysql/
 #2. https://hub.docker.com/_/redis/
 #3. https://hub.docker.com/r/hyness/spring-cloud-config-server/
-#4. custom eureka server (1.6.2) available at https://github.com/jphilippeplante/eureka-server.git
-#5. custom hystrix and turbine (via rabbitmq) (1.0.0) https://github.com/jphilippeplante/hystrix-turbine
-#6. https://hub.docker.com/r/library/rabbitmq
-version: '2'
+#4. https://hub.docker.com/r/library/rabbitmq
+#5. custom eureka server (1.6.2) available at https://github.com/jphilippeplante/eureka-server
+#6. custom hystrix and turbine (via rabbitmq) (1.0.0) https://github.com/jphilippeplante/hystrix-turbine
+version: '3'
 services:
   mysql:
     image: "mysql:latest"
@@ -13,7 +13,7 @@ services:
     volumes:
      - /tmp/mysql-data:/var/lib/mysql
     environment:
-     - MYSQL_ROOT_PASSWORD=my-secret-pw
+     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
   redis:
     image: "redis:alpine"
     environment:
@@ -27,12 +27,19 @@ services:
     image: "hyness/spring-cloud-config-server:latest"
     ports:
      - "8888:8888"
+    environment:
+     - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=${CONFIG_SERVER_URI}
     volumes:
      - ./configurations/config-server.yml:/config/application.yml
+  rabbitmq:
+    image: "rabbitmq:management"
+    ports:
+     - "5672:5672"
+     - "15672:15672"
   eureka:
     build: https://github.com/jphilippeplante/eureka-server.git
     #build: ../eureka-server
-    image: "eureka-server:1.0.0"
+    image: "eureka-server:${EUREKA_VERSION}"
     ports:
      - "8761:8761"
     depends_on:
@@ -44,7 +51,7 @@ services:
   hystrix-turbine:
     build: https://github.com/jphilippeplante/hystrix-turbine.git
     #build: ../hystrix-turbine
-    image: "hystrix-turbine:1.0.0"
+    image: "hystrix-turbine:${HYSTRIX_TURBINE_VERSION}"
     depends_on:
      - rabbitmq
      - configserver
@@ -56,8 +63,3 @@ services:
      - "8989:8989"
     volumes:
      - ./configurations/hystrix-server.yml:/config/application.yml
-  rabbitmq:
-    image: "rabbitmq:management"
-    ports:
-     - "5672:5672"
-     - "15672:15672"
