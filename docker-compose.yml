@@ -11,7 +11,7 @@ services:
     ports:
      - "3306:3306"
     volumes:
-     - /tmp/mysql-data:/var/lib/mysql
+     - ${DATA_MYSQL}:/var/lib/mysql
     environment:
      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
   redis:
@@ -22,14 +22,16 @@ services:
     ports:
      - "6379:6379"
     volumes:
-     - /tmp/redis-data:/data
+     - ${DATA_REDIS}:/data
   configserver:
     image: "hyness/spring-cloud-config-server:latest"
     ports:
      - "8888:8888"
     environment:
-     - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=${CONFIG_SERVER_URI}
+     - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=file:/config-repo
+     - SPRING_PROFILES_ACTIVE=native
     volumes:
+     - ${DATA_CONFIG}:/config-repo
      - ./configurations/config-server.yml:/config/application.yml
   rabbitmq:
     image: "rabbitmq:management"

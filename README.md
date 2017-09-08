@@ -5,10 +5,12 @@ Included: MySQL, Redis, RabbitMQ, Eureka, Config-Server, Hystrix Dashboard and T
 # Required
 - Install Docker and his requirements (ex: VirtualBox).
 - (Windows) Install and use a Unix shell like Git Bash, Cygwin, Docker Tools, etc.
-- Administrator rights to run docker and docker-compose.
+- Administrator rights to run docker.
 
 # Usage
-Be sure that your docker-machine is up and running. The first start up is very long, your system needs to download the dockers images and build the custom ones with maven.
+Before launching docker-compose be sure that:
+- your docker-machine is up and running
+- edit your .env file.
 
 ```
 docker-compose up
@@ -17,11 +19,6 @@ docker-compose up
 Start up in background
 ```
 docker-compose up -d
-```
-
-Start up (multiple files) :
-```
-docker-compose -f docker-compose.yml -f extras/service_example.yml <...> up
 ```
 
 # Images
